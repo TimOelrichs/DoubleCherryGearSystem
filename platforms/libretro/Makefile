@@ -209,10 +209,16 @@ else ifneq (,$(findstring qnx,$(platform)))
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=$(CORE_DIR)/link.T -Wl,--no-undefined
 # emscripten
+# emscripten
 else ifeq ($(platform), emscripten)
-   TARGET := $(TARGET_NAME)_libretro_emscripten.bc
+   TARGET := $(TARGET_NAME)_libretro.bc
    fpic := -fPIC
-   SHARED := -shared -Wl,--version-script=$(CORE_DIR)/link.T -Wl
+   SHARED := -shared
+   CXX = em++
+   CC = emcc
+   AR = emar
+   # Emscripten-spezifische Flags
+   CXXFLAGS += -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 -s FORCE_FILESYSTEM=1
 # RS90
 else ifeq ($(platform), rs90)
    TARGET := $(TARGET_NAME)_libretro.so
